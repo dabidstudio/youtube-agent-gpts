@@ -1,0 +1,133 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Google Sheets Operations API",
+    "version": "1.0.2",
+    "description": "API to perform operations on Google Sheets via Apps Script"
+  },
+  "servers": [
+    {
+      "url": "https://script.google.com/macros/s/AKfycbwEgN5B-jfsncec5aBlMcrpM3v6hRbfTMlqmsS4G9ccNvlTKMmBOvN7ztdiJsAMTrh6",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/exec": {
+      "get": {
+        "summary": "Perform operations on Google Sheets",
+        "operationId": "performOperation",
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "writeContent",
+                "analyzeComments",
+                "analyzeChannel",
+                "searchVideos"
+              ]
+            },
+            "description": "The operation to perform"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The content to write (only required for writeContent operation)"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The query to use when searching videos (only required for searchVideos operation)"
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "optional number of days to filter (only required for searchVideos operation)"
+          },
+          {
+            "name": "comment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional comment for the content (only used for writeContent operation)"
+          },
+          {
+            "name": "videourl",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The URL of the video (required for analyzeComments and analyzeChannel operations optional for writeContent)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success - Value received from the endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "method": {
+                      "type": "string",
+                      "description": "The HTTP method used",
+                      "example": "GET"
+                    },
+                    "operation": {
+                      "type": "string",
+                      "description": "The operation that was performed",
+                      "example": "analyzeChannel"
+                    },
+                    "result": {
+                      "type": "object",
+                      "description": "The result of the operation, specific to the operation performed"
+                    }
+                  },
+                  "required": [
+                    "method",
+                    "operation",
+                    "result"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid operation or parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid operation or parameters"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
